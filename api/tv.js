@@ -1,5 +1,11 @@
-// Vercel Serverless Function (Node 20, FRA region)
-// Безопасный тест-ордер в Binance: /api/tv (POST из TradingView) или ручной GET-тест ?test=1
+// Serverless Function для Vercel (Node 20)
+// Безопасный тест-ордер в Binance (ничего не покупает)
+// Конфигурация функции (попытка закрепить FRA и указать рантайм) — для Vercel:
+module.exports.config = {
+  runtime: 'nodejs20.x',
+  regions: ['fra1']   // Vercel может игнорировать на Hobby, но оставим попытку
+};
+
 const crypto = require('crypto');
 
 module.exports = async (req, res) => {
@@ -19,7 +25,7 @@ module.exports = async (req, res) => {
         const r = await binanceTest(symbol, side, quote);
         return json(res, r, r.status === 200 ? 200 : 400);
       }
-      return json(res, { ok: true, msg: 'Vercel alive (use POST from TradingView or GET ?test=1&...)' });
+      return json(res, { ok: true, msg: 'Vercel alive (use POST from TradingView or GET ?test=1...)' });
     }
 
     if (req.method !== 'POST') return json(res, { ok: false, error: 'use POST' }, 405);
